@@ -1,6 +1,6 @@
-### GraphQL Learning
+### GraphQL Playground
 
-I've been interested on GraphQL for a while now, so this project is where I practice and learn a little bit of it.
+I've been interested on GraphQL for a while now, so this project is a playground where I practice and learn a little bit.
 
 These are the steps I'll take in order to learn a little bit more about GraphQL:
 
