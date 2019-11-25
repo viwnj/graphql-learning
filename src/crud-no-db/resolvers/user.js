@@ -1,17 +1,32 @@
 import db from "../database/db";
-import crypto from "crypto";
+import bcrypt from "bcrypt";
 
 class UserResolver {
   static index() {
     return db.users.findAll();
   }
 
-  static store({ input: { username, email, password } }) {
-    const id = crypto.randomBytes(10).toString("hex");
-    const user = db.users.create({ id, username, email, password });
+  static async store({ input: { username, email, password } }) {
+    const passwordHash = bcrypt.hashSync(password, 8);
+    const user = await db.users.create({
+      username,
+      email,
+      password: passwordHash
+    });
     return {
       code: 200,
       message: "User created successfully!",
+      user
+    };
+  }
+
+  static async update({ input }) {
+    const { uid } = input;
+    const user = await db.users.findByPk(uid);
+    user.update(input);
+    return {
+      code: 200,
+      message: "User updated successfully",
       user
     };
   }
@@ -19,7 +34,8 @@ class UserResolver {
 
 export default {
   Mutation: {
-    createUser: (_, reqBody) => UserResolver.store(reqBody)
+    createUser: (_, reqBody) => UserResolver.store(reqBody),
+    updateUser: (_, reqBody) => UserResolver.update(reqBody)
   },
 
   Query: {

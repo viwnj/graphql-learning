@@ -1,4 +1,7 @@
+import fs from "fs";
 import DBTable from "./dbTable";
+import userSchema from "./userSchema";
+import bookSchema from "./bookSchema";
 
 class DB {
   constructor() {
@@ -6,13 +9,17 @@ class DB {
   }
 
   init() {
-    this.users = new DBTable("users"); // TODO: Load users
-    this.books = new DBTable("books"); // TODO: Load books
+    this.createTable("users", userSchema);
+    this.createTable("books", bookSchema);
   }
 
-  findAll(table) {
-    return Object.values(this[table].entries);
+  createTable(name, schema) {
+    emitter.emit("write", { message: "some data" });
+
+    this[name] = new DBTable(name, schema);
   }
+
+  async writeOut() {}
 }
 
 export default new DB();

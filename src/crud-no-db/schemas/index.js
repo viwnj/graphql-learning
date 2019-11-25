@@ -10,8 +10,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addBook(input: CreateBook): BookCreationMutation # typeDefs/book.js
+    addBook(input: CreateBook): BookCreationMutation
     createUser(input: CreateUser): UserCreationMutation
+    updateUser(input: UpdateUser): UserUpdateMutation
   }
 
   type Query {

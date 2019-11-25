@@ -1,18 +1,26 @@
+import TableEntry from "./tableEntry";
+
 class DBTable {
-  constructor(name) {
-    this.init(name);
+  constructor(name, schema) {
+    this.init(name, schema);
   }
 
-  init(name) {
+  init(name, schema) {
     this.name = name;
+    this.schema = schema;
     this.entries = {};
 
-    this.create = function(tableConstructor) {
-      const length = Object.keys(this.entries).length;
-      this.entries[length + 1] = tableConstructor;
-      return {
-        ...tableConstructor
-      };
+    this.create = async tableConstructor => {
+      try {
+        await schema.validate(tableConstructor);
+        const id = Object.keys(this.entries).length + 1;
+        this.entries[id] = new TableEntry({ ...tableConstructor, id });
+        return {
+          ...this.entries[id]
+        };
+      } catch (e) {
+        throw e;
+      }
     };
 
     this.findAll = function() {
@@ -20,10 +28,17 @@ class DBTable {
     };
 
     /**
-     * Find a user by ID
+     * Find an entry by primary key
+     *
      */
     this.findByPk = function(id) {
-      return this.entries[id];
+      return new Promise((resolve, reject) => {
+        if (this.entries[id]) {
+          resolve(this.entries[id]);
+        } else {
+          reject("Entry not found");
+        }
+      });
     };
 
     /**

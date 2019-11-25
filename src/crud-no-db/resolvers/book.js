@@ -2,7 +2,6 @@ import db from "../database/db";
 
 class BookResolver {
   static index() {
-    console.log("a");
     return db.books.findAll();
   }
 
